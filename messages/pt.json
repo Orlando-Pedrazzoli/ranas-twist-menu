@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "menu": "Menu",
+    "admin": "Admin",
+    "language": "Idioma"
+  },
+  "menu": {
+    "title": "Nosso Menu",
+    "search": "Pesquisar pratos...",
+    "filters": "Filtros",
+    "vegetarian": "Vegetariano",
+    "vegan": "Vegano",
+    "glutenFree": "Sem Glúten",
+    "spiceLevel": "Nível de Picância",
+    "mild": "Suave",
+    "medium": "Médio",
+    "hot": "Picante",
+    "veryHot": "Muito Picante",
+    "price": "Preço",
+    "popular": "Popular",
+    "chefSpecial": "Especial do Chef",
+    "new": "Novo",
+    "viewDetails": "Ver Detalhes",
+    "allergens": "Alérgenos",
+    "ingredients": "Ingredientes",
+    "noResults": "Nenhum prato encontrado",
+    "loading": "Carregando menu..."
+  },
+  "categories": {
+    "starters": "Entradas",
+    "tandoor": "Tandoor",
+    "curry": "Caril",
+    "biryani": "Biryani",
+    "bread": "Pães",
+    "rice": "Arroz",
+    "drinks": "Bebidas",
+    "desserts": "Sobremesas"
+  },
+  "restaurant": {
+    "name": "Rana's Twist",
+    "tagline": "Culinária Indiana de Autor",
+    "address": "Praça de Azurite, 380 – Lote 50 A",
+    "city": "2785-812 São Domingos de Rana",
+    "phone": "+351 XXX XXX XXX",
+    "hours": "Almoço: 12h-15h | Jantar: 19h-23h"
+  },
+  "footer": {
+    "copyright": "© 2024 Rana's Twist. Todos os direitos reservados.",
+    "madeWith": "Feito com ❤️ em Lisboa"
+  }
+}

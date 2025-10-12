@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "menu": "Menu",
+    "admin": "Admin",
+    "language": "Language"
+  },
+  "menu": {
+    "title": "Our Menu",
+    "search": "Search dishes...",
+    "filters": "Filters",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "glutenFree": "Gluten Free",
+    "spiceLevel": "Spice Level",
+    "mild": "Mild",
+    "medium": "Medium",
+    "hot": "Hot",
+    "veryHot": "Very Hot",
+    "price": "Price",
+    "popular": "Popular",
+    "chefSpecial": "Chef's Special",
+    "new": "New",
+    "viewDetails": "View Details",
+    "allergens": "Allergens",
+    "ingredients": "Ingredients",
+    "noResults": "No dishes found",
+    "loading": "Loading menu..."
+  },
+  "categories": {
+    "starters": "Starters",
+    "tandoor": "Tandoor",
+    "curry": "Curry",
+    "biryani": "Biryani",
+    "bread": "Breads",
+    "rice": "Rice",
+    "drinks": "Beverages",
+    "desserts": "Desserts"
+  },
+  "restaurant": {
+    "name": "Rana's Twist",
+    "tagline": "Elevated Indian Cuisine",
+    "address": "Praça de Azurite, 380 – Lote 50 A",
+    "city": "2785-812 São Domingos de Rana",
+    "phone": "+351 XXX XXX XXX",
+    "hours": "Lunch: 12pm-3pm | Dinner: 7pm-11pm"
+  },
+  "footer": {
+    "copyright": "© 2024 Rana's Twist. All rights reserved.",
+    "madeWith": "Made with ❤️ in Lisbon"
+  }
+}
