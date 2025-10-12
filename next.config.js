@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts');
 const nextConfig = {
   images: {
     domains: ['res.cloudinary.com'],
+    unoptimized: true,
   },
   experimental: {
     serverActions: {

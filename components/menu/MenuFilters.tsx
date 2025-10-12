@@ -30,76 +30,114 @@ export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
     const newLevels = filters.spiceLevel.includes(level)
       ? filters.spiceLevel.filter(l => l !== level)
       : [...filters.spiceLevel, level];
-    
+
     onFilterChange({
       ...filters,
       spiceLevel: newLevels,
     });
   };
 
+  const clearFilters = () => {
+    onFilterChange({
+      vegetarian: false,
+      vegan: false,
+      glutenFree: false,
+      spiceLevel: [],
+    });
+  };
+
+  const activeFiltersCount =
+    (filters.vegetarian ? 1 : 0) +
+    (filters.vegan ? 1 : 0) +
+    (filters.glutenFree ? 1 : 0) +
+    filters.spiceLevel.length;
+
   return (
-    <div className="space-y-4">
-      <div>
-        <Label className="text-base font-semibold mb-3 block">{t('filters')}</Label>
-        
-        {/* Dietary Filters */}
-        <div className="flex flex-wrap gap-2 mb-4">
+    <div className='space-y-4 p-4 bg-card rounded-lg border'>
+      <div className='flex items-center justify-between'>
+        <Label className='text-base font-semibold'>{t('filters')}</Label>
+        {activeFiltersCount > 0 && (
+          <Button
+            variant='ghost'
+            size='sm'
+            onClick={clearFilters}
+            className='text-xs'
+          >
+            Clear ({activeFiltersCount})
+          </Button>
+        )}
+      </div>
+
+      {/* Dietary Filters */}
+      <div className='space-y-2'>
+        <Label className='text-sm font-medium mb-2 block'>Dietary</Label>
+        <div className='flex flex-col gap-2'>
           <Button
             variant={filters.vegetarian ? 'default' : 'outline'}
-            size="sm"
+            size='sm'
             onClick={() => toggleDietaryFilter('vegetarian')}
-            className="gap-1"
+            className='justify-start gap-2'
           >
-            <Leaf className="w-4 h-4" />
+            <Leaf className='w-4 h-4' />
             {t('vegetarian')}
           </Button>
-          
+
           <Button
             variant={filters.vegan ? 'default' : 'outline'}
-            size="sm"
+            size='sm'
             onClick={() => toggleDietaryFilter('vegan')}
-            className="gap-1"
+            className='justify-start gap-2'
           >
-            <Leaf className="w-4 h-4" />
+            <Leaf className='w-4 h-4' />
             {t('vegan')}
           </Button>
-          
+
           <Button
             variant={filters.glutenFree ? 'default' : 'outline'}
-            size="sm"
+            size='sm'
             onClick={() => toggleDietaryFilter('glutenFree')}
-            className="gap-1"
+            className='justify-start gap-2'
           >
-            <Wheat className="w-4 h-4" />
+            <Wheat className='w-4 h-4' />
             {t('glutenFree')}
           </Button>
         </div>
-        
-        {/* Spice Level Filters */}
-        <div>
-          <Label className="text-sm font-medium mb-2 block">{t('spiceLevel')}</Label>
-          <div className="flex flex-wrap gap-2">
-            {[0, 1, 2, 3, 4].map(level => (
+      </div>
+
+      {/* Spice Level Filters */}
+      <div className='space-y-2'>
+        <Label className='text-sm font-medium mb-2 block'>
+          {t('spiceLevel')}
+        </Label>
+        <div className='grid grid-cols-2 gap-2'>
+          {[0, 1, 2, 3, 4].map(level => {
+            const labels = {
+              0: { icon: '😌', text: t('mild') },
+              1: { icon: '🌶️', text: 'Suave' },
+              2: { icon: '🌶️🌶️', text: t('medium') },
+              3: { icon: '🌶️🌶️🌶️', text: t('hot') },
+              4: { icon: '🔥', text: t('veryHot') },
+            };
+
+            return (
               <Button
                 key={level}
-                variant={filters.spiceLevel.includes(level) ? 'default' : 'outline'}
-                size="sm"
+                variant={
+                  filters.spiceLevel.includes(level) ? 'default' : 'outline'
+                }
+                size='sm'
                 onClick={() => toggleSpiceLevel(level)}
-                className="gap-1"
+                className='text-xs'
               >
-                {level === 0 && '😌'}
-                {level === 1 && '🌶️'}
-                {level === 2 && '🌶️🌶️'}
-                {level === 3 && '🌶️🌶️🌶️'}
-                {level === 4 && '🔥🔥🔥'}
-                {level === 0 && t('mild')}
-                {level === 1 && 'Suave'}
-                {level === 2 && t('medium')}
-                {level === 3 && t('hot')}
-                {level === 4 && t('veryHot')}
+                <span className='mr-1'>
+                  {labels[level as keyof typeof labels].icon}
+                </span>
+                <span className='truncate'>
+                  {labels[level as keyof typeof labels].text}
+                </span>
               </Button>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
     </div>
