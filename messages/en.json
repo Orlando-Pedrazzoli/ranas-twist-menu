@@ -11,6 +11,8 @@
     "vegetarian": "Vegetarian",
     "vegan": "Vegan",
     "glutenFree": "Gluten Free",
+    "dairyFree": "Dairy Free",
+    "halal": "Halal",
     "spiceLevel": "Spice Level",
     "mild": "Mild",
     "medium": "Medium",

@@ -4,13 +4,15 @@ import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
-import { Leaf, Flame, Wheat } from 'lucide-react';
+import { Leaf, Flame, Wheat, UtensilsCrossed } from 'lucide-react';
 
 interface MenuFiltersProps {
   filters: {
     vegetarian: boolean;
     vegan: boolean;
     glutenFree: boolean;
+    halal: boolean;
+    dairyFree: boolean;
     spiceLevel: number[];
   };
   onFilterChange: (filters: any) => void;
@@ -19,7 +21,7 @@ interface MenuFiltersProps {
 export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
   const t = useTranslations('menu');
 
-  const toggleDietaryFilter = (key: 'vegetarian' | 'vegan' | 'glutenFree') => {
+  const toggleDietaryFilter = (key: 'vegetarian' | 'vegan' | 'glutenFree' | 'halal' | 'dairyFree') => {
     onFilterChange({
       ...filters,
       [key]: !filters[key],
@@ -42,6 +44,8 @@ export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
       vegetarian: false,
       vegan: false,
       glutenFree: false,
+      halal: false,
+      dairyFree: false,
       spiceLevel: [],
     });
   };
@@ -50,6 +54,8 @@ export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
     (filters.vegetarian ? 1 : 0) +
     (filters.vegan ? 1 : 0) +
     (filters.glutenFree ? 1 : 0) +
+    (filters.halal ? 1 : 0) +
+    (filters.dairyFree ? 1 : 0) +
     filters.spiceLevel.length;
 
   return (
@@ -100,6 +106,26 @@ export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
           >
             <Wheat className='w-4 h-4' />
             {t('glutenFree')}
+          </Button>
+
+          <Button
+            variant={filters.halal ? 'default' : 'outline'}
+            size='sm'
+            onClick={() => toggleDietaryFilter('halal')}
+            className='justify-start gap-2'
+          >
+            <UtensilsCrossed className='w-4 h-4' />
+            {t('halal')}
+          </Button>
+
+          <Button
+            variant={filters.dairyFree ? 'default' : 'outline'}
+            size='sm'
+            onClick={() => toggleDietaryFilter('dairyFree')}
+            className='justify-start gap-2'
+          >
+            <UtensilsCrossed className='w-4 h-4' />
+            {t('dairyFree')}
           </Button>
         </div>
       </div>

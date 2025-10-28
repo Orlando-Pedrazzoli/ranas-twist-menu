@@ -13,7 +13,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatPrice, getSpiceLevelIcon } from '@/lib/utils/cn';
-import { Leaf, Wheat, Eye } from 'lucide-react';
+import { Leaf, Wheat, Eye, UtensilsCrossed } from 'lucide-react';
 import { useLocale } from 'next-intl';
 
 interface DishProps {
@@ -21,6 +21,7 @@ interface DishProps {
     _id: string;
     name: { pt: string; en: string };
     description: { pt: string; en: string };
+    category?: string | { _id: string; name: { pt: string; en: string } };
     price: number;
     compareAtPrice?: number;
     images?: Array<{ url: string; isPrimary?: boolean }>;
@@ -28,6 +29,8 @@ interface DishProps {
       vegetarian?: boolean;
       vegan?: boolean;
       glutenFree?: boolean;
+      dairyFree?: boolean;
+      halal?: boolean;
     };
     spiceLevel?: number;
     badges?: Array<{ type: string }>;
@@ -118,6 +121,18 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
             <Badge variant='outline' className='gap-1 text-xs'>
               <Wheat className='w-3 h-3' />
               {locale === 'pt' ? 'Sem Glúten' : 'Gluten Free'}
+            </Badge>
+          )}
+          {dish.dietaryInfo?.dairyFree && (
+            <Badge variant='outline' className='gap-1 text-xs'>
+              <UtensilsCrossed className='w-3 h-3' />
+              {locale === 'pt' ? 'Sem Lactose' : 'Dairy Free'}
+            </Badge>
+          )}
+          {dish.dietaryInfo?.halal && (
+            <Badge variant='outline' className='gap-1 text-xs'>
+              <UtensilsCrossed className='w-3 h-3' />
+              {locale === 'pt' ? 'Halal' : 'Halal'}
             </Badge>
           )}
           {dish.spiceLevel !== undefined && dish.spiceLevel > 0 && (

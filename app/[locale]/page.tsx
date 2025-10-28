@@ -14,7 +14,7 @@ interface Dish {
   _id: string;
   name: { pt: string; en: string };
   description: { pt: string; en: string };
-  category: string;
+  category: string | { _id: string; name: { pt: string; en: string } } | null;
   price: number;
   compareAtPrice?: number;
   images?: Array<{ url: string; isPrimary?: boolean }>;
@@ -22,6 +22,8 @@ interface Dish {
     vegetarian?: boolean;
     vegan?: boolean;
     glutenFree?: boolean;
+    dairyFree?: boolean;
+    halal?: boolean;
   };
   allergens?: string[];
   spiceLevel?: number;
@@ -53,6 +55,8 @@ export default function MenuPage() {
     vegetarian: false,
     vegan: false,
     glutenFree: false,
+    halal: false,
+    dairyFree: false,
     spiceLevel: [] as number[],
   });
 
@@ -76,72 +80,9 @@ export default function MenuPage() {
     } catch (error) {
       console.error('Error fetching menu:', error);
       setError('Failed to load menu. Please refresh the page.');
-      // Set sample data as fallback
-      setSampleData();
     } finally {
       setLoading(false);
     }
-  };
-
-  const setSampleData = () => {
-    // Sample categories
-    setCategories([
-      {
-        _id: '1',
-        name: { pt: 'Entradas', en: 'Starters' },
-        slug: 'starters',
-        order: 1,
-        active: true,
-      },
-      {
-        _id: '2',
-        name: { pt: 'Pratos Principais', en: 'Main Dishes' },
-        slug: 'main',
-        order: 2,
-        active: true,
-      },
-      {
-        _id: '3',
-        name: { pt: 'Sobremesas', en: 'Desserts' },
-        slug: 'desserts',
-        order: 3,
-        active: true,
-      },
-    ]);
-
-    // Sample dishes
-    setDishes([
-      {
-        _id: '1',
-        name: { pt: 'Samosas Vegetais', en: 'Vegetable Samosas' },
-        description: {
-          pt: 'Pastéis crocantes recheados com legumes temperados',
-          en: 'Crispy pastries filled with spiced vegetables',
-        },
-        category: '1',
-        price: 6.5,
-        images: [{ url: '/placeholder-food.jpg', isPrimary: true }],
-        dietaryInfo: { vegetarian: true, vegan: true },
-        spiceLevel: 1,
-        available: true,
-        badges: [{ type: 'popular' }],
-      },
-      {
-        _id: '2',
-        name: { pt: 'Chicken Tandoori', en: 'Chicken Tandoori' },
-        description: {
-          pt: 'Frango marinado em iogurte e especiarias',
-          en: 'Chicken marinated in yogurt and spices',
-        },
-        category: '2',
-        price: 16.9,
-        images: [{ url: '/placeholder-food.jpg', isPrimary: true }],
-        dietaryInfo: { glutenFree: true },
-        spiceLevel: 2,
-        available: true,
-        badges: [{ type: 'chef-special' }],
-      },
-    ]);
   };
 
   // Setup Fuse.js for fuzzy search
@@ -158,9 +99,17 @@ export default function MenuPage() {
   const filteredDishes = useMemo(() => {
     let result = dishes;
 
-    // Category filter
+    // Category filter - FIX: Handle string, object, null, and undefined
     if (selectedCategory !== 'all') {
-      result = result.filter(dish => dish.category === selectedCategory);
+      result = result.filter(dish => {
+        if (!dish.category) return false; // Skip dishes without category
+        
+        const categoryId = typeof dish.category === 'string' 
+          ? dish.category 
+          : dish.category._id;
+        
+        return categoryId === selectedCategory;
+      });
     }
 
     // Dietary filters
@@ -172,6 +121,12 @@ export default function MenuPage() {
     }
     if (filters.glutenFree) {
       result = result.filter(dish => dish.dietaryInfo?.glutenFree);
+    }
+    if (filters.halal) {
+      result = result.filter(dish => dish.dietaryInfo?.halal);
+    }
+    if (filters.dairyFree) {
+      result = result.filter(dish => dish.dietaryInfo?.dairyFree);
     }
 
     // Spice level filter

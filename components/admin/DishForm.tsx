@@ -33,6 +33,7 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
       vegetarian: false,
       vegan: false,
       glutenFree: false,
+      dairyFree: false,
       halal: true,
     },
     spiceLevel: 1,
@@ -50,7 +51,13 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
         price: dish.price || 0,
         compareAtPrice: dish.compareAtPrice || 0,
         images: dish.images || [],
-        dietaryInfo: dish.dietaryInfo,
+        dietaryInfo: dish.dietaryInfo || {
+          vegetarian: false,
+          vegan: false,
+          glutenFree: false,
+          dairyFree: false,
+          halal: true,
+        },
         spiceLevel: dish.spiceLevel || 1,
         available: dish.available,
         displayOrder: dish.displayOrder || 0,
@@ -270,7 +277,7 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
       {/* Dietary Info */}
       <div className="space-y-2">
         <Label>Informação Dietética</Label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <label className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -306,6 +313,18 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
               className="rounded"
             />
             <span className="text-sm">Sem Glúten</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={formData.dietaryInfo.dairyFree}
+              onChange={(e) => setFormData(prev => ({
+                ...prev,
+                dietaryInfo: { ...prev.dietaryInfo, dairyFree: e.target.checked }
+              }))}
+              className="rounded"
+            />
+            <span className="text-sm">Sem Lactose</span>
           </label>
           <label className="flex items-center space-x-2">
             <input
