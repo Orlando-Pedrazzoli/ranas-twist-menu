@@ -3,13 +3,10 @@ require('dotenv').config({ path: '.env.local' });
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('MongoDB connected');
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ MongoDB connected');
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('❌ MongoDB connection error:', error);
     process.exit(1);
   }
 };
@@ -54,8 +51,12 @@ const DishSchema = new mongoose.Schema({
   allergens: [String],
   spiceLevel: Number,
   badges: [{
-    type: String,
+    type: {
+      type: String,
+      enum: ['popular', 'chef-special', 'new'],
+    },
     priority: Number,
+    validUntil: Date,
   }],
   available: Boolean,
   displayOrder: Number,
@@ -66,11 +67,11 @@ const Dish = mongoose.model('Dish', DishSchema);
 
 const seedData = async () => {
   try {
-    // Clear existing data
+    console.log('🗑️  Clearing existing data...');
     await Category.deleteMany({});
     await Dish.deleteMany({});
 
-    // Create categories
+    console.log('📂 Creating categories...');
     const categories = await Category.create([
       {
         name: { pt: 'Entradas', en: 'Starters' },
@@ -116,9 +117,9 @@ const seedData = async () => {
       },
     ]);
 
-    console.log('Categories created:', categories.length);
+    console.log('✅ Categories created:', categories.length);
 
-    // Create sample dishes
+    console.log('🍽️  Creating sample dishes...');
     const dishes = [
       // Starters
       {
@@ -133,7 +134,7 @@ const seedData = async () => {
         category: categories[0]._id,
         price: 6.50,
         images: [{
-          url: 'https://res.cloudinary.com/demo/image/upload/v1/food/samosa.jpg',
+          url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400',
           isPrimary: true,
         }],
         dietaryInfo: {
@@ -144,6 +145,7 @@ const seedData = async () => {
         spiceLevel: 1,
         available: true,
         displayOrder: 1,
+        badges: [{ type: 'popular', priority: 1 }],
       },
       {
         name: { 
@@ -151,8 +153,8 @@ const seedData = async () => {
           en: 'Allo Tikk Chatt' 
         },
         description: { 
-          pt: 'Bolinhos de batata crocantes com iogurte, chutneys e especiarias - especialidade da casa',
-          en: 'Crispy potato patties with yogurt, chutneys and spices - house specialty'
+          pt: 'Bolinhos de batata crocantes com iogurte, chutneys e especiarias',
+          en: 'Crispy potato patties with yogurt, chutneys and spices'
         },
         category: categories[0]._id,
         price: 7.50,
@@ -161,6 +163,7 @@ const seedData = async () => {
           vegetarian: true,
           halal: true,
         },
+        allergens: ['dairy'],
         spiceLevel: 2,
         available: true,
         displayOrder: 2,
@@ -173,8 +176,8 @@ const seedData = async () => {
           en: 'Chicken Tandoori' 
         },
         description: { 
-          pt: 'Frango marinado em iogurte e especiarias, grelhado no forno tandoor - prato estrela',
-          en: 'Chicken marinated in yogurt and spices, grilled in tandoor oven - signature dish'
+          pt: 'Frango marinado em iogurte e especiarias, grelhado no forno tandoor',
+          en: 'Chicken marinated in yogurt and spices, grilled in tandoor oven'
         },
         category: categories[1]._id,
         price: 16.90,
@@ -270,7 +273,7 @@ const seedData = async () => {
         compareAtPrice: 22.90,
         badges: [
           { type: 'chef-special', priority: 1 },
-          { type: 'popular', priority: 2 }
+          { type: 'new', priority: 2 }
         ],
         dietaryInfo: {
           glutenFree: true,
@@ -322,25 +325,6 @@ const seedData = async () => {
         available: true,
         displayOrder: 1,
       },
-      {
-        name: { 
-          pt: 'Chai Masala', 
-          en: 'Masala Chai' 
-        },
-        description: { 
-          pt: 'Chá indiano tradicional com especiarias e leite',
-          en: 'Traditional Indian tea with spices and milk'
-        },
-        category: categories[5]._id,
-        price: 3.50,
-        dietaryInfo: {
-          vegetarian: true,
-          glutenFree: true,
-        },
-        allergens: ['dairy'],
-        available: true,
-        displayOrder: 2,
-      },
 
       // Desserts
       {
@@ -364,13 +348,18 @@ const seedData = async () => {
     ];
 
     await Dish.create(dishes);
-    console.log('Dishes created:', dishes.length);
+    console.log('✅ Dishes created:', dishes.length);
 
-    console.log('Seed completed successfully!');
+    console.log('\n🎉 Seed completed successfully!');
+    console.log('📊 Summary:');
+    console.log('   - Categories:', categories.length);
+    console.log('   - Dishes:', dishes.length);
+    console.log('\n🚀 You can now start the server with: npm run dev');
   } catch (error) {
-    console.error('Seed error:', error);
+    console.error('❌ Seed error:', error);
   } finally {
-    mongoose.connection.close();
+    await mongoose.connection.close();
+    console.log('👋 MongoDB connection closed');
   }
 };
 
