@@ -4,7 +4,7 @@ import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
-import { Leaf, Flame, Wheat, UtensilsCrossed } from 'lucide-react';
+import { Leaf, Wheat, UtensilsCrossed } from 'lucide-react';
 
 interface MenuFiltersProps {
   filters: {
@@ -57,6 +57,12 @@ export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
     (filters.halal ? 1 : 0) +
     (filters.dairyFree ? 1 : 0) +
     filters.spiceLevel.length;
+
+  const spiceLevelOptions = [
+    { level: 1, icon: '🌶️', text: 'Suave' },
+    { level: 2, icon: '🌶️🌶️', text: 'Picante' },
+    { level: 3, icon: '🔥', text: 'Muito Picante' },
+  ];
 
   return (
     <div className='space-y-4 p-4 bg-card rounded-lg border'>
@@ -135,35 +141,21 @@ export function MenuFilters({ filters, onFilterChange }: MenuFiltersProps) {
         <Label className='text-sm font-medium mb-2 block'>
           {t('spiceLevel')}
         </Label>
-        <div className='grid grid-cols-2 gap-2'>
-          {[0, 1, 2, 3, 4].map(level => {
-            const labels = {
-              0: { icon: '😌', text: t('mild') },
-              1: { icon: '🌶️', text: 'Suave' },
-              2: { icon: '🌶️🌶️', text: t('medium') },
-              3: { icon: '🌶️🌶️🌶️', text: t('hot') },
-              4: { icon: '🔥', text: t('veryHot') },
-            };
-
-            return (
-              <Button
-                key={level}
-                variant={
-                  filters.spiceLevel.includes(level) ? 'default' : 'outline'
-                }
-                size='sm'
-                onClick={() => toggleSpiceLevel(level)}
-                className='text-xs'
-              >
-                <span className='mr-1'>
-                  {labels[level as keyof typeof labels].icon}
-                </span>
-                <span className='truncate'>
-                  {labels[level as keyof typeof labels].text}
-                </span>
-              </Button>
-            );
-          })}
+        <div className='grid grid-cols-3 gap-2'>
+          {spiceLevelOptions.map(({ level, icon, text }) => (
+            <Button
+              key={level}
+              variant={
+                filters.spiceLevel.includes(level) ? 'default' : 'outline'
+              }
+              size='sm'
+              onClick={() => toggleSpiceLevel(level)}
+              className='text-xs flex flex-col items-center gap-1 h-auto py-2'
+            >
+              <span className='text-lg'>{icon}</span>
+              <span className='truncate text-xs'>{text}</span>
+            </Button>
+          ))}
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@ export function formatPrice(price: number, locale: string = 'pt-PT'): string {
 }
 
 export function getSpiceLevelIcon(level: number): string {
-  const icons = ['', '🌶️', '🌶️🌶️', '🌶️🌶️🌶️', '🌶️🌶️🌶️🌶️'];
+  const icons = ['', '🌶️', '🌶️🌶️', '🔥'];
   return icons[level] || '';
 }
 
@@ -22,8 +22,8 @@ export function getSpiceLevelLabel(
   locale: string = 'pt'
 ): string {
   const labels = {
-    pt: ['Suave', 'Pouco Picante', 'Médio', 'Picante', 'Muito Picante'],
-    en: ['Mild', 'Slightly Spicy', 'Medium', 'Hot', 'Very Hot'],
+    pt: ['Sem Picância', 'Suave', 'Picante', 'Muito Picante'],
+    en: ['No Spice', 'Mild', 'Spicy', 'Very Spicy'],
   };
   return labels[locale as 'pt' | 'en'][level] || '';
 }

@@ -17,6 +17,7 @@ export default function EditDishPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const [dish, setDish] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDish();
@@ -29,10 +30,17 @@ export default function EditDishPage({ params }: PageProps) {
       
       if (data.success) {
         const foundDish = data.dishes.find((d: any) => d._id === resolvedParams.id);
-        setDish(foundDish);
+        if (foundDish) {
+          setDish(foundDish);
+        } else {
+          setError('Prato não encontrado');
+        }
+      } else {
+        setError('Erro ao buscar prato');
       }
     } catch (error) {
       console.error('Error fetching dish:', error);
+      setError('Erro ao buscar prato');
     } finally {
       setLoading(false);
     }
@@ -40,20 +48,29 @@ export default function EditDishPage({ params }: PageProps) {
 
   const handleSubmit = async (data: any) => {
     try {
+      console.log('Enviando dados:', data);
+      
       const response = await fetch('/api/dishes', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ _id: resolvedParams.id, ...data }),
       });
 
-      if (response.ok) {
+      const result = await response.json();
+      console.log('Resposta da API:', result);
+
+      if (response.ok && result.success) {
+        alert('Prato atualizado com sucesso!');
         router.push('/admin/dashboard');
       } else {
-        throw new Error('Failed to update dish');
+        const errorMsg = result.details || result.error || 'Erro desconhecido';
+        console.error('Erro na resposta:', errorMsg);
+        alert(`Erro ao atualizar prato: ${errorMsg}`);
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error('Error updating dish:', error);
-      alert('Erro ao atualizar prato');
+      // Não lança erro novamente para evitar múltiplos alerts
     }
   };
 
@@ -68,13 +85,13 @@ export default function EditDishPage({ params }: PageProps) {
     );
   }
 
-  if (!dish) {
+  if (error || !dish) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg">Prato não encontrado</p>
+          <p className="text-lg text-destructive mb-4">{error || 'Prato não encontrado'}</p>
           <Link href="/admin/dashboard">
-            <Button className="mt-4">Voltar ao Dashboard</Button>
+            <Button>Voltar ao Dashboard</Button>
           </Link>
         </div>
       </div>

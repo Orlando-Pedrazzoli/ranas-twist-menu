@@ -27,7 +27,6 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
     description: { pt: '', en: '' },
     category: '',
     price: 0,
-    compareAtPrice: 0,
     images: [] as Array<{ url: string; isPrimary: boolean }>,
     dietaryInfo: {
       vegetarian: false,
@@ -36,7 +35,7 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
       dairyFree: false,
       halal: true,
     },
-    spiceLevel: 1,
+    spiceLevel: 0,
     available: true,
     displayOrder: 0,
   });
@@ -49,7 +48,6 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
         description: dish.description,
         category: dish.category._id || dish.category,
         price: dish.price || 0,
-        compareAtPrice: dish.compareAtPrice || 0,
         images: dish.images || [],
         dietaryInfo: dish.dietaryInfo || {
           vegetarian: false,
@@ -58,7 +56,7 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
           dairyFree: false,
           halal: true,
         },
-        spiceLevel: dish.spiceLevel || 1,
+        spiceLevel: dish.spiceLevel || 0,
         available: dish.available,
         displayOrder: dish.displayOrder || 0,
       });
@@ -117,11 +115,11 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
     }));
   };
 
-  const handlePriceChange = (field: 'price' | 'compareAtPrice', value: string) => {
+  const handlePriceChange = (value: string) => {
     const numValue = value === '' ? 0 : parseFloat(value);
     setFormData(prev => ({
       ...prev,
-      [field]: isNaN(numValue) ? 0 : numValue
+      price: isNaN(numValue) ? 0 : numValue
     }));
   };
 
@@ -196,8 +194,8 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
         </div>
       </div>
 
-      {/* Categoria e Preços */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Categoria e Preço */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="category">Categoria *</Label>
           <select
@@ -219,18 +217,8 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
             type="number"
             step="0.01"
             value={formData.price || ''}
-            onChange={(e) => handlePriceChange('price', e.target.value)}
+            onChange={(e) => handlePriceChange(e.target.value)}
             required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="compareAtPrice">Preço Anterior (€)</Label>
-          <Input
-            id="compareAtPrice"
-            type="number"
-            step="0.01"
-            value={formData.compareAtPrice || ''}
-            onChange={(e) => handlePriceChange('compareAtPrice', e.target.value)}
           />
         </div>
       </div>
@@ -343,21 +331,21 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
 
       {/* Spice Level */}
       <div className="space-y-2">
-        <Label htmlFor="spiceLevel">Nível de Picância (0-4)</Label>
-        <Input
+        <Label htmlFor="spiceLevel">Nível de Picância</Label>
+        <select
           id="spiceLevel"
-          type="number"
-          min="0"
-          max="4"
+          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
           value={formData.spiceLevel}
-          onChange={(e) => {
-            const value = parseInt(e.target.value);
-            setFormData(prev => ({ 
-              ...prev, 
-              spiceLevel: isNaN(value) ? 0 : value 
-            }));
-          }}
-        />
+          onChange={(e) => setFormData(prev => ({ 
+            ...prev, 
+            spiceLevel: parseInt(e.target.value) 
+          }))}
+        >
+          <option value="0">Sem Picância</option>
+          <option value="1">🌶️ Suave</option>
+          <option value="2">🌶️🌶️ Picante</option>
+          <option value="3">🔥 Muito Picante</option>
+        </select>
       </div>
 
       {/* Available */}

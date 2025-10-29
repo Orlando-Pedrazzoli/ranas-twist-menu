@@ -13,20 +13,29 @@ export default function NewDishPage() {
 
   const handleSubmit = async (data: any) => {
     try {
+      console.log('Enviando dados:', data);
+      
       const response = await fetch('/api/dishes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
-      if (response.ok) {
+      const result = await response.json();
+      console.log('Resposta da API:', result);
+
+      if (response.ok && result.success) {
+        alert('Prato criado com sucesso!');
         router.push('/admin/dashboard');
       } else {
-        throw new Error('Failed to create dish');
+        const errorMsg = result.details || result.error || 'Erro desconhecido';
+        console.error('Erro na resposta:', errorMsg);
+        alert(`Erro ao criar prato: ${errorMsg}`);
+        throw new Error(errorMsg);
       }
     } catch (error) {
       console.error('Error creating dish:', error);
-      alert('Erro ao criar prato');
+      // Não lança erro novamente para evitar múltiplos alerts
     }
   };
 

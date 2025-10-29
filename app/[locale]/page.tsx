@@ -185,13 +185,6 @@ export default function MenuPage() {
                 </Button>
               </Link>
 
-              {/* Admin Link */}
-              <Link href='/admin'>
-                <Button variant='ghost' size='sm'>
-                  Admin
-                </Button>
-              </Link>
-
               {/* Mobile Menu Toggle */}
               <Button
                 variant='ghost'
@@ -305,6 +298,13 @@ export default function MenuPage() {
             <p className='mt-2'>{t('restaurant.hours')}</p>
             <p className='mt-4'>{t('footer.copyright')}</p>
             <p className='mt-1'>{t('footer.madeWith')}</p>
+            <div className='mt-4'>
+              <Link href='/admin'>
+                <Button variant='ghost' size='sm'>
+                  Admin
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

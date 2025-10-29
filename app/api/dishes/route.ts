@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/mongoose';
 import Dish from '@/models/Dish';
-import Category from '@/models/Category';  // ← ADICIONAR ESTA LINHA
+import Category from '@/models/Category';
 import { isAdmin } from '@/lib/utils/auth';
 
 export async function GET() {
@@ -28,13 +28,23 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
+    // Validar spiceLevel
+    if (body.spiceLevel !== undefined) {
+      body.spiceLevel = Math.max(0, Math.min(3, parseInt(body.spiceLevel) || 0));
+    }
+    
+    // Remover compareAtPrice se for 0 ou undefined
+    if (!body.compareAtPrice) {
+      delete body.compareAtPrice;
+    }
+    
     const dish = await Dish.create(body);
     
     return NextResponse.json({ dish, success: true }, { status: 201 });
   } catch (error) {
     console.error('Error creating dish:', error);
     return NextResponse.json(
-      { error: 'Failed to create dish', success: false },
+      { error: 'Failed to create dish', success: false, details: error.message },
       { status: 500 }
     );
   }
@@ -50,17 +60,30 @@ export async function PUT(request: Request) {
     await dbConnect();
     const { _id, ...data } = await request.json();
     
-    const dish = await Dish.findByIdAndUpdate(_id, data, { new: true });
+    // Validar spiceLevel
+    if (data.spiceLevel !== undefined) {
+      data.spiceLevel = Math.max(0, Math.min(3, parseInt(data.spiceLevel) || 0));
+    }
+    
+    // Remover compareAtPrice se for 0 ou undefined
+    if (!data.compareAtPrice) {
+      delete data.compareAtPrice;
+    }
+    
+    const dish = await Dish.findByIdAndUpdate(_id, data, { 
+      new: true,
+      runValidators: true 
+    });
     
     if (!dish) {
-      return NextResponse.json({ error: 'Dish not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Dish not found', success: false }, { status: 404 });
     }
     
     return NextResponse.json({ dish, success: true });
   } catch (error) {
     console.error('Error updating dish:', error);
     return NextResponse.json(
-      { error: 'Failed to update dish', success: false },
+      { error: 'Failed to update dish', success: false, details: error.message },
       { status: 500 }
     );
   }

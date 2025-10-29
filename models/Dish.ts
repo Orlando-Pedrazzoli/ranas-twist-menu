@@ -36,8 +36,8 @@ const DishSchema = new mongoose.Schema({
   spiceLevel: {
     type: Number,
     min: 0,
-    max: 4,
-    default: 1,
+    max: 3,
+    default: 0,
   },
   badges: [{
     type: {

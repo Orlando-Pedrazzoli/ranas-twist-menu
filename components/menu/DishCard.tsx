@@ -51,7 +51,7 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
   return (
     <Card className='overflow-hidden hover:shadow-lg transition-all duration-300 card-hover'>
       {primaryImage && (
-        <div className='relative h-48 w-full bg-gray-100'>
+        <div className='relative aspect-square w-full bg-gray-100'>
           {imageUrl === '/placeholder-food.jpg' ? (
             <div className='flex items-center justify-center h-full bg-gradient-to-br from-primary/10 to-primary/20'>
               <span className='text-4xl'>🍛</span>
@@ -136,7 +136,7 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
             </Badge>
           )}
           {dish.spiceLevel !== undefined && dish.spiceLevel > 0 && (
-            <Badge variant='destructive' className='text-xs'>
+            <Badge variant='outline' className='text-xs bg-white border-red-300 text-red-600'>
               {getSpiceLevelIcon(dish.spiceLevel)}
             </Badge>
           )}
