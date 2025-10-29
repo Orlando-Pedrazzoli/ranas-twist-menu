@@ -23,7 +23,6 @@ interface DishProps {
     description: { pt: string; en: string };
     category?: string | { _id: string; name: { pt: string; en: string } };
     price: number;
-    compareAtPrice?: number;
     images?: Array<{ url: string; isPrimary?: boolean }>;
     dietaryInfo: {
       vegetarian?: boolean;
@@ -69,11 +68,6 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
               }}
             />
           )}
-          {dish.compareAtPrice && (
-            <Badge className='absolute top-2 right-2' variant='destructive'>
-              {locale === 'pt' ? 'Promoção' : 'Sale'}
-            </Badge>
-          )}
         </div>
       )}
 
@@ -82,19 +76,9 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
           <CardTitle className='text-lg line-clamp-1'>
             {dish.name[locale]}
           </CardTitle>
-          <div className='flex flex-col items-end shrink-0'>
-            <span className='text-lg font-bold text-primary'>
-              {formatPrice(dish.price, locale === 'pt' ? 'pt-PT' : 'en-US')}
-            </span>
-            {dish.compareAtPrice && (
-              <span className='text-xs line-through text-muted-foreground'>
-                {formatPrice(
-                  dish.compareAtPrice,
-                  locale === 'pt' ? 'pt-PT' : 'en-US'
-                )}
-              </span>
-            )}
-          </div>
+          <span className='text-lg font-bold text-primary shrink-0'>
+            {formatPrice(dish.price, locale === 'pt' ? 'pt-PT' : 'en-US')}
+          </span>
         </div>
       </CardHeader>
 
