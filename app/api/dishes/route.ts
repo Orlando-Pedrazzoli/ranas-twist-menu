@@ -43,8 +43,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ dish, success: true }, { status: 201 });
   } catch (error) {
     console.error('Error creating dish:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to create dish', success: false, details: error.message },
+      { error: 'Failed to create dish', success: false, details: errorMessage },
       { status: 500 }
     );
   }
@@ -82,8 +83,9 @@ export async function PUT(request: Request) {
     return NextResponse.json({ dish, success: true });
   } catch (error) {
     console.error('Error updating dish:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to update dish', success: false, details: error.message },
+      { error: 'Failed to update dish', success: false, details: errorMessage },
       { status: 500 }
     );
   }
