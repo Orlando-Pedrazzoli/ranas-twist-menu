@@ -14,7 +14,7 @@ interface Dish {
   _id: string;
   name: { pt: string; en: string };
   description: { pt: string; en: string };
-  category: string | { _id: string; name: { pt: string; en: string } } | null;
+  category: string | { _id: string; name: { pt: string; en: string } } | null | undefined;
   price: number;
   compareAtPrice?: number;
   images?: Array<{ url: string; isPrimary?: boolean }>;
@@ -283,7 +283,10 @@ export default function MenuPage() {
                 {filteredDishes.map(dish => (
                   <DishCard
                     key={dish._id}
-                    dish={dish}
+                    dish={{
+                      ...dish,
+                      category: dish.category || undefined
+                    }}
                     onViewDetails={handleViewDetails}
                   />
                 ))}
