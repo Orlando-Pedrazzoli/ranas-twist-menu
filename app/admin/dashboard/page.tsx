@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { DishTable } from '@/components/admin/DishTable';
-import { Plus, Search, LogOut, Eye } from 'lucide-react';
+import { Plus, Search, LogOut, Eye, QrCode } from 'lucide-react';
 import Link from 'next/link';
 
 interface Dish {
@@ -133,6 +133,37 @@ export default function DashboardPage() {
             </CardHeader>
           </Card>
         </div>
+
+        {/* QR Code Card */}
+        <Card className="mb-8">
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <QrCode className="w-5 h-5" />
+                  QR Code do Menu
+                </CardTitle>
+                <CardDescription>
+                  Gere e imprima o QR Code para as mesas do restaurante
+                </CardDescription>
+              </div>
+              <Link href="/admin/qrcode">
+                <Button>
+                  <QrCode className="w-4 h-4 mr-2" />
+                  Gerenciar QR Code
+                </Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-4 rounded-lg border border-primary/20">
+              <p className="text-sm text-muted-foreground">
+                💡 <strong>Dica:</strong> Gere um único QR Code e imprima para todas as mesas. 
+                Seus clientes poderão escanear e visualizar o menu instantaneamente no celular!
+              </p>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Dishes Management */}
         <Card>
