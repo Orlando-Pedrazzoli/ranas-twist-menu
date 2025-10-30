@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { DishTable } from '@/components/admin/DishTable';
@@ -97,7 +96,6 @@ export default function DashboardPage() {
               <p className="text-sm text-muted-foreground">Dashboard de Gestão</p>
             </div>
             <div className="flex items-center gap-2">
-              <ThemeToggle />
               <Link href="/pt" target="_blank">
                 <Button variant="outline" size="sm">
                   <Eye className="w-4 h-4 mr-2" />
