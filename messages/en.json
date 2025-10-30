@@ -40,14 +40,14 @@
   },
   "restaurant": {
     "name": "Rana's Twist",
-    "tagline": "Elevated Indian Cuisine",
-    "address": "Praça de Azurite, 380 – Lote 50 A",
-    "city": "2785-812 São Domingos de Rana",
-    "phone": "+351 XXX XXX XXX",
+    "tagline": "Indian Restaurant",
+    "address": "R. Dr. António Patrício Gouveia 23A",
+    "city": "Oeiras, Portugal 2780-185",
+    "phone": "+351 214430890",
     "hours": "Lunch: 12pm-3pm | Dinner: 7pm-11pm"
   },
   "footer": {
-    "copyright": "© 2024 Rana's Twist. All rights reserved.",
-    "madeWith": "Made with ❤️ in Lisbon"
+    "copyright": "© 2025 Rana's Twist. All rights reserved.",
+    "madeWith": "Developed by orlandopedrazzoli.com"
   }
 }

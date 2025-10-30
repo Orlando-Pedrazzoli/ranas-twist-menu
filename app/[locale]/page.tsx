@@ -301,7 +301,17 @@ export default function MenuPage() {
             <p>{t('restaurant.city')}</p>
             <p className='mt-2'>{t('restaurant.hours')}</p>
             <p className='mt-4'>{t('footer.copyright')}</p>
-            <p className='mt-1'>{t('footer.madeWith')}</p>
+            <p className='mt-1'>
+              {locale === 'pt' ? 'Desenvolvido por ' : 'Developed by '}
+              <a 
+                href='https://orlandopedrazzoli.com' 
+                target='_blank' 
+                rel='noopener noreferrer'
+                className='text-primary hover:underline'
+              >
+                orlandopedrazzoli.com
+              </a>
+            </p>
             <div className='mt-4'>
               <Link href='/admin'>
                 <Button variant='ghost' size='sm'>

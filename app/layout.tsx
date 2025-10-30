@@ -17,12 +17,12 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Rana's Twist - Menu Digital",
-  description: 'Culinária Indiana de Autor em São Domingos de Rana',
-  keywords: 'restaurante indiano, lisboa, oeiras, rana, menu digital, qr code',
+  description: 'Culinária Indiana em Oeiras',
+  keywords: 'restaurante indiano, lisboa, oeiras, menu digital, qr code',
   authors: [{ name: "Rana's Twist" }],
   openGraph: {
     title: "Rana's Twist - Menu Digital",
-    description: 'Culinária Indiana de Autor em São Domingos de Rana',
+    description: 'Culinária Indiana em Oeiras',
     type: 'website',
     locale: 'pt_PT',
     siteName: "Rana's Twist",
