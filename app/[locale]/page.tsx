@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { DishCard } from '@/components/menu/DishCard';
 import { MenuFilters } from '@/components/menu/MenuFilters';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Search, Globe, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Fuse from 'fuse.js';
@@ -177,6 +178,9 @@ export default function MenuPage() {
               </p>
             </div>
             <div className='flex items-center gap-2'>
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               {/* Language Switcher */}
               <Link href={locale === 'pt' ? '/en' : '/pt'}>
                 <Button variant='ghost' size='sm'>
