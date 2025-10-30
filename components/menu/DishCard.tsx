@@ -158,7 +158,7 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
             onClick={handleViewDetails}
           >
             <ChefHat className='w-4 h-4 mr-2' />
-            {locale === 'pt' ? 'Ver Ingredientes' : 'View Ingredients'}
+            {locale === 'pt' ? 'Ver Descrição' : 'View Description'}
           </Button>
         </CardFooter>
       </Card>
