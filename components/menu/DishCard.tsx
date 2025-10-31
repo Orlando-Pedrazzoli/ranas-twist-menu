@@ -83,14 +83,44 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
         )}
 
         <CardHeader className='pb-3'>
-          <div className='flex justify-between items-start gap-2'>
-            <CardTitle className='text-lg line-clamp-1'>
+          {/* OPÇÃO 1: Título com duas linhas e preço abaixo */}
+          <div className='space-y-2'>
+            <CardTitle 
+              className='text-lg leading-tight line-clamp-2 min-h-[2.8em]'
+              title={dish.name[locale]} // Tooltip com nome completo ao passar o mouse
+            >
               {dish.name[locale]}
             </CardTitle>
-            <span className='text-lg font-bold text-primary shrink-0'>
+            <div className='flex justify-between items-center'>
+              <span className='text-lg font-bold text-primary'>
+                {formatPrice(dish.price, locale === 'pt' ? 'pt-PT' : 'en-US')}
+              </span>
+              {/* Badges de destaque podem ir aqui */}
+              {dish.badges && dish.badges.some(b => b.type === 'popular') && (
+                <Badge variant='warning' className='text-xs'>
+                  🔥 {locale === 'pt' ? 'Popular' : 'Popular'}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          {/* OPÇÃO 2 (alternativa): Nome completo com fonte menor se necessário
+          <div className='flex flex-col gap-2'>
+            <CardTitle 
+              className={`leading-tight ${
+                dish.name[locale].length > 25 
+                  ? 'text-base' 
+                  : 'text-lg'
+              }`}
+              title={dish.name[locale]}
+            >
+              {dish.name[locale]}
+            </CardTitle>
+            <span className='text-lg font-bold text-primary'>
               {formatPrice(dish.price, locale === 'pt' ? 'pt-PT' : 'en-US')}
             </span>
           </div>
+          */}
         </CardHeader>
 
         <CardContent className='pt-0 flex-1 space-y-3'>
@@ -123,31 +153,39 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
             {dish.dietaryInfo?.halal && (
               <Badge variant='outline' className='gap-1 text-xs'>
                 <UtensilsCrossed className='w-3 h-3' />
-                {locale === 'pt' ? 'Halal' : 'Halal'}
+                Halal
               </Badge>
             )}
             {dish.spiceLevel !== undefined && dish.spiceLevel > 0 && (
-              <Badge variant='outline' className='text-xs bg-white border-red-300 text-red-600'>
+              <Badge 
+                variant='outline' 
+                className='text-xs border-red-500 text-red-600 dark:border-red-400 dark:text-red-400 bg-transparent'
+              >
                 {getSpiceLevelIcon(dish.spiceLevel)}
               </Badge>
             )}
           </div>
 
-          {/* Badges */}
+          {/* Other badges (chef-special, new) - moved here if not popular */}
           {dish.badges && dish.badges.length > 0 && (
             <div className='flex flex-wrap gap-1'>
-              {dish.badges.map((badge, index) => (
-                <Badge key={index} variant='warning' className='text-xs'>
-                  {badge.type === 'popular' &&
-                    (locale === 'pt' ? '🔥 Popular' : '🔥 Popular')}
-                  {badge.type === 'chef-special' &&
-                    (locale === 'pt' ? '👨‍🍳 Especial do Chef' : '👨‍🍳 Chef Special')}
-                  {badge.type === 'new' &&
-                    (locale === 'pt' ? '✨ Novo' : '✨ New')}
-                </Badge>
-              ))}
+              {dish.badges
+                .filter(badge => badge.type !== 'popular') // Popular já está no header
+                .map((badge, index) => (
+                  <Badge key={index} variant='warning' className='text-xs'>
+                    {badge.type === 'chef-special' &&
+                      (locale === 'pt' ? '👨‍🍳 Especial do Chef' : '👨‍🍳 Chef Special')}
+                    {badge.type === 'new' &&
+                      (locale === 'pt' ? '✨ Novo' : '✨ New')}
+                  </Badge>
+                ))}
             </div>
           )}
+
+          {/* Descrição curta (opcional) */}
+          <p className='text-xs text-muted-foreground line-clamp-2'>
+            {dish.description[locale]}
+          </p>
         </CardContent>
 
         <CardFooter className='pt-0'>
@@ -158,7 +196,7 @@ export function DishCard({ dish, onViewDetails }: DishProps) {
             onClick={handleViewDetails}
           >
             <ChefHat className='w-4 h-4 mr-2' />
-            {locale === 'pt' ? 'Ver Descrição' : 'View Description'}
+            {locale === 'pt' ? 'Ver Detalhes' : 'View Details'}
           </Button>
         </CardFooter>
       </Card>

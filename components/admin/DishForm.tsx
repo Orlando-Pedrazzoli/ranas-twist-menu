@@ -46,7 +46,8 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
       setFormData({
         name: dish.name,
         description: dish.description,
-        category: dish.category._id || dish.category,
+        // Correção: Verifica se category existe antes de acessar _id
+        category: dish.category ? (dish.category._id || dish.category) : '',
         price: dish.price || 0,
         images: dish.images || [],
         dietaryInfo: dish.dietaryInfo || {
@@ -125,6 +126,13 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validação adicional
+    if (!formData.category) {
+      alert('Por favor, selecione uma categoria');
+      return;
+    }
+    
     setLoading(true);
     
     try {
@@ -205,6 +213,9 @@ export function DishForm({ dish, onSubmit }: DishFormProps) {
             onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
             required
           >
+            {!formData.category && (
+              <option value="">Selecione uma categoria</option>
+            )}
             {categories.map(cat => (
               <option key={cat._id} value={cat._id}>{cat.name.pt}</option>
             ))}

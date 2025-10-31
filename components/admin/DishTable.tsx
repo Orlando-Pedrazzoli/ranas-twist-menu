@@ -11,7 +11,7 @@ import Image from 'next/image';
 interface Dish {
   _id: string;
   name: { pt: string; en: string };
-  category: { name: { pt: string } } | null;
+  category?: { name: { pt: string; en: string } } | null;
   price: number;
   available: boolean;
   images?: Array<{ url: string }>;
@@ -69,7 +69,7 @@ export function DishTable({ dishes, onDelete }: DishTableProps) {
                 </div>
               </td>
               <td className="p-4 text-sm">
-                {dish.category ? (
+                {dish.category && dish.category.name ? (
                   dish.category.name.pt
                 ) : (
                   <span className="text-muted-foreground italic">Sem categoria</span>
