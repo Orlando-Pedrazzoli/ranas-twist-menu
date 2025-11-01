@@ -23,6 +23,7 @@ export default function QRCodePage() {
   const generateQRCode = async () => {
     setLoading(true);
     try {
+      // Gerar QR code como data URL para preview
       const QRCode = (await import('qrcode')).default;
       const dataUrl = await QRCode.toDataURL(menuUrl, {
         width: selectedSize,
@@ -68,236 +69,63 @@ export default function QRCodePage() {
           <head>
             <title>Rana's Twist - QR Code Menu</title>
             <style>
-              @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
-              
-              * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-              }
-              
               body {
-                font-family: 'Inter', sans-serif;
-                background: linear-gradient(135deg, #FFF9E6 0%, #FFFFFF 100%);
+                margin: 0;
+                padding: 40px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
                 min-height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 20px;
+                font-family: Arial, sans-serif;
               }
-              
-              .card {
-                background: white;
-                border-radius: 24px;
-                padding: 48px 40px;
-                max-width: 450px;
-                width: 100%;
-                box-shadow: 0 20px 60px rgba(236, 194, 22, 0.15);
-                border: 3px solid #ECC216;
-                position: relative;
-                overflow: hidden;
-              }
-              
-              .card::before {
-                content: '';
-                position: absolute;
-                top: -50%;
-                right: -50%;
-                width: 200%;
-                height: 200%;
-                background: radial-gradient(circle, rgba(236, 194, 22, 0.05) 0%, transparent 70%);
-                pointer-events: none;
-              }
-              
-              .header {
+              .container {
                 text-align: center;
-                margin-bottom: 32px;
-                position: relative;
-                z-index: 1;
+                border: 2px solid #ECC216;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
               }
-              
-              .logo-section {
-                margin-bottom: 16px;
-              }
-              
-              .restaurant-name {
-                font-family: 'Playfair Display', serif;
-                font-size: 42px;
-                font-weight: 700;
+              h1 {
                 color: #ECC216;
-                margin-bottom: 8px;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-                letter-spacing: 1px;
+                margin-bottom: 10px;
+                font-size: 32px;
               }
-              
               .tagline {
+                color: #666;
+                margin-bottom: 20px;
                 font-size: 16px;
-                color: #666;
-                font-weight: 500;
-                letter-spacing: 2px;
-                text-transform: uppercase;
               }
-              
-              .divider {
-                width: 80px;
-                height: 3px;
-                background: linear-gradient(90deg, transparent, #ECC216, transparent);
-                margin: 24px auto;
+              img {
+                max-width: 400px;
+                height: auto;
+                margin: 20px 0;
               }
-              
-              .qr-container {
-                background: white;
-                padding: 24px;
-                border-radius: 16px;
-                display: inline-block;
-                box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-                margin: 0 auto 32px;
-                display: block;
-                width: fit-content;
-                border: 2px solid #F5F5F5;
-              }
-              
-              .qr-container img {
-                display: block;
-                width: 280px;
-                height: 280px;
-                border-radius: 8px;
-              }
-              
               .instructions {
-                text-align: center;
-                position: relative;
-                z-index: 1;
-              }
-              
-              .main-text {
-                font-size: 20px;
-                font-weight: 600;
                 color: #333;
-                margin-bottom: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
+                font-size: 18px;
+                margin-top: 20px;
+                font-weight: bold;
               }
-              
-              .emoji {
-                font-size: 24px;
-                animation: bounce 2s infinite;
-              }
-              
-              @keyframes bounce {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-10px); }
-              }
-              
-              .sub-text {
-                font-size: 14px;
-                color: #888;
-                line-height: 1.6;
-              }
-              
-              .features {
-                margin-top: 24px;
-                padding-top: 24px;
-                border-top: 2px dashed #E0E0E0;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-              }
-              
-              .feature {
-                text-align: center;
-                padding: 12px;
-                background: #FAFAFA;
-                border-radius: 12px;
-              }
-              
-              .feature-icon {
-                font-size: 24px;
-                margin-bottom: 6px;
-              }
-              
-              .feature-text {
-                font-size: 12px;
+              .scan-text {
                 color: #666;
-                font-weight: 500;
+                font-size: 14px;
+                margin-top: 10px;
               }
-              
-              .footer {
-                margin-top: 28px;
-                text-align: center;
-                font-size: 11px;
-                color: #999;
-              }
-              
               @media print {
                 body {
-                  background: white;
-                  padding: 0;
-                }
-                
-                .card {
-                  box-shadow: none;
-                  max-width: 100%;
-                  page-break-inside: avoid;
-                }
-                
-                @page {
-                  margin: 1cm;
-                  size: A5 portrait;
+                  padding: 20px;
                 }
               }
             </style>
           </head>
           <body>
-            <div class="card">
-              <div class="header">
-                <div class="logo-section">
-                  <h1 class="restaurant-name">Rana's Twist</h1>
-                  <p class="tagline">Culinária Indiana Autêntica</p>
-                </div>
-                <div class="divider"></div>
-              </div>
-              
-              <div class="qr-container">
-                <img src="${qrCodeUrl}" alt="QR Code Menu Digital" />
-              </div>
-              
-              <div class="instructions">
-                <p class="main-text">
-                  <span class="emoji">📱</span>
-                  <span>Escaneie para ver o Menu</span>
-                </p>
-                <p class="sub-text">
-                  Abra a câmera do seu smartphone<br/>
-                  e aponte para o QR Code
-                </p>
-              </div>
-              
-              <div class="features">
-                <div class="feature">
-                  <div class="feature-icon">🌍</div>
-                  <div class="feature-text">Português<br/>& English</div>
-                </div>
-                <div class="feature">
-                  <div class="feature-icon">🌱</div>
-                  <div class="feature-text">Opções<br/>Vegetarianas</div>
-                </div>
-                <div class="feature">
-                  <div class="feature-icon">🌶️</div>
-                  <div class="feature-text">Níveis de<br/>Picância</div>
-                </div>
-                <div class="feature">
-                  <div class="feature-icon">✨</div>
-                  <div class="feature-text">Sem Contacto<br/>Digital</div>
-                </div>
-              </div>
-              
-              <div class="footer">
-                R. Dr. António Patrício Gouveia 23A, Oeiras<br/>
-                📞 +351 214 430 890
-              </div>
+            <div class="container">
+              <h1>Rana's Twist</h1>
+              <p class="tagline">Culinária Indiana de Autor</p>
+              <img src="${qrCodeUrl}" alt="QR Code Menu" />
+              <p class="instructions">📱 Escaneie para ver o Menu</p>
+              <p class="scan-text">Use a câmera do seu smartphone</p>
             </div>
           </body>
         </html>
@@ -337,7 +165,7 @@ export default function QRCodePage() {
             <div>
               <h1 className="text-2xl font-bold">QR Code do Menu</h1>
               <p className="text-sm text-muted-foreground">
-                Design profissional pronto para impressão
+                Gere e imprima o QR Code para as mesas
               </p>
             </div>
           </div>
@@ -351,50 +179,34 @@ export default function QRCodePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <QrCode className="w-5 h-5" />
-                Preview do Design
+                Preview do QR Code
               </CardTitle>
               <CardDescription>
-                Design estilizado pronto para impressão em mesas e menus
+                Este QR Code leva diretamente ao menu do restaurante
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border-2 border-yellow-200">
+              <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg">
                 {loading ? (
                   <div className="flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
                     <p className="text-sm text-muted-foreground">Gerando QR Code...</p>
                   </div>
                 ) : qrCodeUrl ? (
-                  <div className="text-center bg-white p-8 rounded-2xl shadow-xl border-4 border-yellow-400 max-w-md">
-                    <h2 className="text-3xl font-bold text-yellow-600 mb-2 font-display">Rana's Twist</h2>
-                    <p className="text-sm text-gray-600 mb-4 uppercase tracking-wide">Culinária Indiana Autêntica</p>
-                    <div className="w-16 h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent mx-auto mb-6"></div>
-                    <div className="bg-white p-4 rounded-lg shadow-md border-2 border-gray-100 mb-6">
+                  <div className="text-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg inline-block">
                       <Image
                         src={qrCodeUrl}
                         alt="QR Code Menu"
-                        width={240}
-                        height={240}
-                        className="mx-auto rounded"
+                        width={selectedSize}
+                        height={selectedSize}
+                        className="mx-auto"
                       />
                     </div>
-                    <p className="text-lg font-semibold text-gray-800 mb-2 flex items-center justify-center gap-2">
-                      <span className="text-2xl">📱</span>
-                      <span>Escaneie para ver o Menu</span>
+                    <p className="mt-4 text-sm font-medium">Rana's Twist - Menu Digital</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Escaneie para acessar o menu
                     </p>
-                    <p className="text-xs text-gray-600 mb-4">
-                      Abra a câmera do seu smartphone<br/>e aponte para o QR Code
-                    </p>
-                    <div className="grid grid-cols-2 gap-3 pt-4 border-t-2 border-dashed border-gray-200">
-                      <div className="bg-gray-50 p-2 rounded-lg">
-                        <div className="text-xl mb-1">🌍</div>
-                        <div className="text-xs text-gray-600">Português<br/>& English</div>
-                      </div>
-                      <div className="bg-gray-50 p-2 rounded-lg">
-                        <div className="text-xl mb-1">🌱</div>
-                        <div className="text-xs text-gray-600">Opções<br/>Vegetarianas</div>
-                      </div>
-                    </div>
                   </div>
                 ) : null}
               </div>
@@ -450,7 +262,7 @@ export default function QRCodePage() {
             <CardHeader>
               <CardTitle>Download e Impressão</CardTitle>
               <CardDescription>
-                Baixe o QR Code ou imprima o design completo
+                Baixe o QR Code ou imprima diretamente
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -473,10 +285,11 @@ export default function QRCodePage() {
                 </Button>
                 <Button 
                   onClick={printQRCode}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
+                  className="w-full"
+                  variant="secondary"
                 >
                   <Printer className="w-4 h-4 mr-2" />
-                  Imprimir Design
+                  Imprimir
                 </Button>
               </div>
             </CardContent>
@@ -493,7 +306,7 @@ export default function QRCodePage() {
                   1
                 </span>
                 <p>
-                  <strong>Imprimir Design Completo:</strong> Clique em "Imprimir Design" para uma versão estilizada e profissional pronta para as mesas
+                  <strong>Download:</strong> Clique em "Download PNG" ou "Download SVG" para salvar o QR Code
                 </p>
               </div>
               <div className="flex gap-3">
@@ -501,7 +314,7 @@ export default function QRCodePage() {
                   2
                 </span>
                 <p>
-                  <strong>Download Simples:</strong> Use "Download PNG/SVG" para apenas o QR Code, caso queira criar o seu próprio design
+                  <strong>Impressão:</strong> Use o botão "Imprimir" para uma versão formatada com o logo do restaurante
                 </p>
               </div>
               <div className="flex gap-3">
@@ -509,7 +322,7 @@ export default function QRCodePage() {
                   3
                 </span>
                 <p>
-                  <strong>Plastificar:</strong> Recomendamos plastificar o design impresso para maior durabilidade nas mesas
+                  <strong>Colocação:</strong> Imprima várias cópias, plastifique e cole uma em cada mesa do restaurante
                 </p>
               </div>
               <div className="flex gap-3">
@@ -517,15 +330,13 @@ export default function QRCodePage() {
                   4
                 </span>
                 <p>
-                  <strong>Tamanho Recomendado:</strong> Para mesas, use "Grande (500px)" ou "Extra Grande (800px)" para melhor escaneamento
+                  <strong>Tamanho Recomendado:</strong> Para mesas, use "Grande (500px)" ou "Extra Grande (800px)"
                 </p>
               </div>
-              <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-lg mt-4">
-                <p className="text-amber-900 font-semibold mb-2">
-                  💡 Dica Profissional
-                </p>
-                <p className="text-amber-800 text-sm">
-                  O design inclui features do menu (multi-idioma, opções vegetarianas, níveis de picância) para incentivar os clientes a escanear. O mesmo QR Code pode ser usado em todas as mesas!
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg mt-4">
+                <p className="text-amber-800">
+                  💡 <strong>Dica:</strong> O mesmo QR Code pode ser usado em todas as mesas! 
+                  Imprima uma vez e faça várias cópias.
                 </p>
               </div>
             </CardContent>
