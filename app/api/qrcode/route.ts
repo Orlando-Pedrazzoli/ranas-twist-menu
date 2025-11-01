@@ -12,15 +12,18 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'png'; // png or svg
     const size = parseInt(searchParams.get('size') || '300');
+    const customUrl = searchParams.get('url'); // Suporte para URL customizado
 
-    // URL do menu (sempre português como padrão)
-    const menuUrl = process.env.NEXT_PUBLIC_APP_URL 
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/pt`
-      : 'http://localhost:3000/pt';
+    // Usar URL customizado se fornecido, senão usar o padrão do menu
+    const qrUrl = customUrl ? decodeURIComponent(customUrl) : (
+      process.env.NEXT_PUBLIC_APP_URL 
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/pt`
+        : 'http://localhost:3000/pt'
+    );
 
     if (format === 'svg') {
       // Retornar SVG
-      const svg = await QRCode.toString(menuUrl, {
+      const svg = await QRCode.toString(qrUrl, {
         type: 'svg',
         width: size,
         margin: 2,
@@ -38,7 +41,7 @@ export async function GET(request: Request) {
       });
     } else {
       // Retornar PNG
-      const qrCodeDataUrl = await QRCode.toDataURL(menuUrl, {
+      const qrCodeDataUrl = await QRCode.toDataURL(qrUrl, {
         width: size,
         margin: 2,
         color: {
