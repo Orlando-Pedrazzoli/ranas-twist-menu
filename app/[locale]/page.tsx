@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { DishCard } from '@/components/menu/DishCard';
@@ -15,7 +15,7 @@ interface Dish {
   _id: string;
   name: { pt: string; en: string };
   description: { pt: string; en: string };
-  category: string | { _id: string; name: { pt: string; en: string } } | null | undefined;
+  category: string | { _id: string; name: { pt: string; en: string }; order: number } | null | undefined;
   price: number;
   compareAtPrice?: number;
   images?: Array<{ url: string; isPrimary?: boolean }>;
@@ -31,6 +31,7 @@ interface Dish {
   badges?: Array<{ type: string }>;
   searchTags?: string[];
   available: boolean;
+  displayOrder?: number;
 }
 
 interface Category {
@@ -60,6 +61,9 @@ export default function MenuPage() {
     dairyFree: false,
     spiceLevel: [] as number[],
   });
+
+  // Ref para a área de conteúdo onde queremos fazer scroll
+  const contentTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchMenu();
@@ -144,8 +148,51 @@ export default function MenuPage() {
       result = result.filter(dish => searchIds.includes(dish._id));
     }
 
+    // Ordenar por categoria quando "Todos" está selecionado
+    if (selectedCategory === 'all') {
+      result = result.sort((a, b) => {
+        // Obter informações da categoria de cada prato
+        const aCategoryOrder = typeof a.category === 'object' && a.category !== null
+          ? (a.category.order || 0)
+          : 999; // Pratos sem categoria vão para o final
+        
+        const bCategoryOrder = typeof b.category === 'object' && b.category !== null
+          ? (b.category.order || 0)
+          : 999; // Pratos sem categoria vão para o final
+
+        // Primeiro ordenar por ordem da categoria
+        if (aCategoryOrder !== bCategoryOrder) {
+          return aCategoryOrder - bCategoryOrder;
+        }
+
+        // Depois ordenar por displayOrder dentro da mesma categoria
+        return (a.displayOrder || 0) - (b.displayOrder || 0);
+      });
+    } else {
+      // Quando uma categoria específica está selecionada, ordenar apenas por displayOrder
+      result = result.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    }
+
     return result;
   }, [dishes, selectedCategory, filters, searchTerm, fuse]);
+
+  // Função para mudar categoria e fazer scroll to top
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    
+    // Fazer scroll suave para o topo do conteúdo (logo abaixo das categorias)
+    if (contentTopRef.current) {
+      // Calcular a posição: altura da navbar (73px) + altura das categorias (55px)
+      const offset = 128; // Total aproximado
+      const elementPosition = contentTopRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const handleViewDetails = (dish: Dish) => {
     // TODO: Implement modal or navigation to dish details
@@ -165,7 +212,7 @@ export default function MenuPage() {
 
   return (
     <div className='min-h-screen bg-background'>
-      {/* Header */}
+      {/* Header - Sticky no topo */}
       <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
         <div className='container mx-auto px-4 py-4'>
           <div className='flex items-center justify-between'>
@@ -207,28 +254,30 @@ export default function MenuPage() {
         </div>
       </header>
 
-      {/* Search Bar */}
-      <div className='container mx-auto px-4 py-4'>
-        <div className='relative max-w-md mx-auto'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4' />
-          <Input
-            type='search'
-            placeholder={t('menu.search')}
-            className='pl-10'
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
+      {/* Search Bar - NORMAL (não sticky) */}
+      <div className='bg-background border-b'>
+        <div className='container mx-auto px-4 py-4'>
+          <div className='relative max-w-md mx-auto'>
+            <Search className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4' />
+            <Input
+              type='search'
+              placeholder={t('menu.search')}
+              className='pl-10'
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className='border-b'>
+      {/* Category Tabs - Sticky logo abaixo da navbar */}
+      <div className='sticky top-[73px] z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b'>
         <div className='container mx-auto px-4'>
           <div className='flex gap-2 overflow-x-auto py-2 scrollbar-hide'>
             <Button
               variant={selectedCategory === 'all' ? 'default' : 'ghost'}
               size='sm'
-              onClick={() => setSelectedCategory('all')}
+              onClick={() => handleCategoryChange('all')}
               className='whitespace-nowrap'
             >
               {locale === 'pt' ? 'Todos' : 'All'}
@@ -240,7 +289,7 @@ export default function MenuPage() {
                   selectedCategory === category._id ? 'default' : 'ghost'
                 }
                 size='sm'
-                onClick={() => setSelectedCategory(category._id)}
+                onClick={() => handleCategoryChange(category._id)}
                 className='whitespace-nowrap'
               >
                 {category.name[locale]}
@@ -250,7 +299,8 @@ export default function MenuPage() {
         </div>
       </div>
 
-      <div className='container mx-auto px-4 py-6'>
+      {/* Ref para scroll - marca o início do conteúdo */}
+      <div ref={contentTopRef} className='container mx-auto px-4 py-6'>
         <div className='grid lg:grid-cols-4 gap-6'>
           {/* Filters Sidebar - Desktop */}
           <div
@@ -258,7 +308,7 @@ export default function MenuPage() {
               mobileMenuOpen ? 'block' : 'hidden lg:block'
             }`}
           >
-            <div className='sticky top-24'>
+            <div className='sticky top-[140px]'>
               <MenuFilters filters={filters} onFilterChange={setFilters} />
             </div>
           </div>
