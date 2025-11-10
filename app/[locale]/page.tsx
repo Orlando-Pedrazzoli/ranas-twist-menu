@@ -182,8 +182,8 @@ export default function MenuPage() {
     
     // Fazer scroll suave para o topo do conteúdo (logo abaixo das categorias)
     if (contentTopRef.current) {
-      // Calcular a posição: altura da navbar (73px) + altura das categorias (55px)
-      const offset = 128; // Total aproximado
+      // Calcular a posição: altura da navbar (73px) + altura das categorias (aumentada)
+      const offset = 136; // Total ajustado para o novo tamanho
       const elementPosition = contentTopRef.current.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -270,10 +270,10 @@ export default function MenuPage() {
         </div>
       </div>
 
-      {/* Category Tabs - Sticky logo abaixo da navbar */}
-      <div className='sticky top-[73px] z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b'>
+      {/* Category Tabs - Sticky logo abaixo da navbar - OPÇÃO 2: py-4 + top ajustado */}
+      <div className='sticky top-[77px] z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b'>
         <div className='container mx-auto px-4'>
-          <div className='flex gap-2 overflow-x-auto py-2 scrollbar-hide'>
+          <div className='flex gap-2 overflow-x-auto py-4 scrollbar-hide'>
             <Button
               variant={selectedCategory === 'all' ? 'default' : 'ghost'}
               size='sm'
@@ -308,7 +308,7 @@ export default function MenuPage() {
               mobileMenuOpen ? 'block' : 'hidden lg:block'
             }`}
           >
-            <div className='sticky top-[140px]'>
+            <div className='sticky top-[152px]'>
               <MenuFilters filters={filters} onFilterChange={setFilters} />
             </div>
           </div>
